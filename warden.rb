@@ -13,8 +13,14 @@ WhiteList = ["10.0.0."]
 def splitDate(line)
 	# Example: "Jun 27 15:03:16 "
 	matches = /^(\w+ \d+ \d{2}:\d{2}:\d{2}) (.*)/.match(line)
-	date = DateTime.parse(matches[1]).to_date
-	return [date, matches[2]]
+	unless( matches.nil? )
+		begin
+			date = DateTime.parse(matches[1]).to_date
+			return [date, matches[2]]
+		rescue
+		end
+	end
+	return [nil, nil]
 end
 
 # Parses a message, identifies if it's an authentication failure and returns ip or nil
@@ -40,6 +46,9 @@ offenders = Hash.new(0)
 
 for line in loglines
 	date, msg = splitDate(line)
+	if( date.nil? ) # Log rollover line or something else we don't care about
+		next
+	end
 	age = (now - date).to_i
 	if( age > ThresholdTime )
 		next
