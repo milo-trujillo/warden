@@ -44,7 +44,9 @@ loglines = File.read(LogFile).split("\n")
 now = DateTime.now.to_date
 offenders = Hash.new(0)
 
-for line in loglines
+# Loglines may be very long, so let's free the memory as we read it
+while( loglines.length > 0 )
+	line = loglines.shift(0)
 	date, msg = splitDate(line)
 	if( date.nil? ) # Log rollover line or something else we don't care about
 		next
