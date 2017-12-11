@@ -26,15 +26,15 @@ end
 # Parses a message, identifies if it's an authentication failure and returns ip or nil
 def parseMessage(message)
 	match = /authentication error for [\S]+ from (\d+\.\d+\.\d+\.\d+)/.match(message)
-	if( match != nil )
+	unless( match.nil? )
 		return match[1]
 	end
 	match = /Invalid user [\S]+ from (\d+\.\d+\.\d+\.\d+)/.match(message)
-	if( match != nil )
+	unless( match.nil? )
 		return match[1]
 	end
 	match = /maximum authentication attempts exceeded for .* from (\d+\.\d+\.\d+\.\d+)/.match(message)
-	if( match != nil )
+	unless( match.nil? )
 		return match[1]
 	end
 	return nil
